@@ -1,0 +1,29 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Rename freely, but keep "name", the service binding and WORKER_NAME the same:
+  // the emergency stop skips WORKER_NAME so it can never stop this dashboard.
+  "name": "cf-overview",
+  "main": "./custom-worker.ts",
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": ["nodejs_compat", "global_fetch_strictly_public"],
+  "assets": { "directory": ".open-next/assets", "binding": "ASSETS" },
+  "services": [{ "binding": "WORKER_SELF_REFERENCE", "service": "cf-overview" }],
+  // Reachable only through the Access-protected custom domain.
+  "routes": [{ "pattern": "REPLACE_WITH_HOSTNAME", "custom_domain": true }],
+  "workers_dev": false,
+  "preview_urls": false,
+  "triggers": { "crons": ["*/15 * * * *"] },
+  // ~100 log lines/day; well inside Workers Logs' included volume.
+  "observability": { "enabled": true },
+  // `npx wrangler d1 create cf-overview` prints the id.
+  "d1_databases": [{ "binding": "DB", "database_name": "cf-overview", "database_id": "REPLACE_WITH_D1_ID", "migrations_dir": "migrations" }],
+  "vars": {
+    "WORKER_NAME": "cf-overview",
+    "APP_URL": "https://REPLACE_WITH_HOSTNAME",
+    "ACCOUNT_ID": "REPLACE_WITH_ACCOUNT_ID",
+    // Zero Trust → Access → Applications. Requests fail closed (403) until both are set.
+    "ACCESS_TEAM_DOMAIN": "REPLACE_WITH_TEAM.cloudflareaccess.com",
+    "ACCESS_AUD": "REPLACE_WITH_ACCESS_AUD"
+  }
+  // Secrets (wrangler secret put): CF_READ_TOKEN, CF_STOP_TOKEN (optional), ALERT_WEBHOOK_URL (optional)
+}

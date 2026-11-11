@@ -1,0 +1,39 @@
+{
+  "name": "cloudflare-overview",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "lint": "eslint",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
+    "cf-typegen": "wrangler types --env-interface CloudflareEnv --strict-vars=false cloudflare-env.d.ts",
+    "test": "vitest run",
+    "db:migrate": "wrangler d1 migrations apply cf-overview --remote",
+    "db:migrate:local": "wrangler d1 migrations apply cf-overview --local",
+    "demo": "npm run db:migrate:local && wrangler d1 execute cf-overview --local --file demo/seed.sql && next dev"
+  },
+  "dependencies": {
+    "@opennextjs/cloudflare": "^1.20.16",
+    "jose": "^6.2.15",
+    "lucide-react": "^1.70.0",
+    "next": "16.4.5",
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^22.20.5",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.5",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "vitest": "^5.1.0",
+    "wrangler": "^4.158.0"
+  },
+  "description": "A simple overview of your Cloudflare account: projects, costs and security",
+  "license": "MIT"
+}
